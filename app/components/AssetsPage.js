@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text,Image } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
+import { Container, Button, Text } from 'native-base';
 
 export default class AssetsPage extends Component {
     static navigationOptions = {
@@ -11,28 +12,16 @@ export default class AssetsPage extends Component {
             />
         )
     }
-    constructor() {
-        super();
-
-        this.state = {
-            textInputValue: ''
-        }
-    }
     render() {
-        let index = 0;
-        const data = [
-            { key: index++, section: true, label: 'Fruits' },
-            { key: index++, label: 'Red Apples' },
-            { key: index++, label: 'Cherries' },
-            { key: index++, label: 'Cranberries' },
-            { key: index++, label: 'Pink Grapefruit' },
-            { key: index++, label: 'Raspberries' }
-        ];
         return (
             <View style={styles.container}>
-                <Text style={styles.welcome}>
-                    主页
-                </Text>
+                <Container>
+                    <Button>
+                        <Text>
+                            主页
+                        </Text>
+                    </Button>
+                </Container>
             </View>
         );
     }
