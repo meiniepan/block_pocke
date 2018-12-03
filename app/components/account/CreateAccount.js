@@ -10,7 +10,7 @@ import React, {Component} from 'react';
 import {Button, Platform, StyleSheet, Text, TextInput, View} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
 import Toast from "react-native-root-toast/lib/Toast";
-import Loading from "./Loading";
+import Loading from "../Loading";
 
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -20,7 +20,7 @@ const instructions = Platform.select({
 });
 
 
-export default class Account extends Component<> {
+export default class CreateAccount extends Component<> {
     static navigationOptions = {
         title: 'Create Account',
     };

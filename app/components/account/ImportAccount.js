@@ -11,7 +11,7 @@ import {Button, StyleSheet, TextInput, View} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
 import Toast from "react-native-root-toast/lib/Toast";
 
-export default class Account extends Component<> {
+export default class ImportAccount extends Component<> {
     static navigationOptions = {
         title: 'Import Account',
     };
@@ -40,7 +40,7 @@ export default class Account extends Component<> {
         );
     }
 
-     async saveAccount(rel) {
+    async saveAccount(rel) {
         // await AsyncStorage.setItem("account", "5Hxgk9eLVfXF9LNPupGK3y7B3LukMRdraFyNdGiZfQKkUwhXUva");
         // var pk = await AsyncStorage.getItem('account');
         // Toast.show('import success');
@@ -50,7 +50,7 @@ export default class Account extends Component<> {
             Toast.show(accountBean.error);
             return;
         }
-        var pks=[];
+        var pks = [];
         storage.load({
             key: 'accountList'
         }).then(res => {
@@ -59,7 +59,7 @@ export default class Account extends Component<> {
                 key: 'accountList',
                 data: res,
             });
-            for (var item of res){
+            for (var item of res) {
                 pks.push(item.privateKey);
             }
         }).catch(err => {
@@ -71,8 +71,8 @@ export default class Account extends Component<> {
                 data: accounts,
             });
             this.saveDefaultAccount(accountBean.name);
-        }).finally(res=>{
-            nodejs.channel.send(JSON.stringify({data:pks,category:'accountChange'}));
+        }).finally(res => {
+            nodejs.channel.send(JSON.stringify({data: pks, category: 'accountChange'}));
         });
     }
 

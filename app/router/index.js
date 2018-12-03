@@ -1,20 +1,27 @@
-import React, { Component } from 'react';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import React, {Component} from 'react';
+import {createAppContainer, createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 
 import AssetsPage from '../components/AssetsPage';
 import DiscoverPage from '../components/DiscoverPage';
 import InformationPage from '../components/InformationPage';
 import MinePage from '../components/MinePage';
+import CreateAccount from "../components/account/CreateAccount";
+import ImportAccount from "../components/account/ImportAccount";
 
 // import { createStackNavigator, createMaterialTopTabNavigator, Header } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
-export default class Pages extends Component{
-    constructor(props){
+export default class Pages extends Component {
+    static navigationOptions = {
+        title: 'Index',
+    };
+
+    constructor(props) {
         super(props);
     }
-    render(){ //返回 APPNavigator
-        return(
+
+    render() { //返回 APPNavigator
+        return (
             <AppNavigator/>
         )
     }
@@ -26,7 +33,7 @@ const TabNavigator = createBottomTabNavigator({
     page2: {screen: DiscoverPage},
     page3: {screen: InformationPage},
     page4: {screen: MinePage},
-},{
+}, {
     initialRouteName: 'page1', //初始路由
     backBehavior: 'none', //控制 "返回" 按钮是否返回到主页
     tabBarOptions: {
@@ -44,10 +51,20 @@ const TabNavigator = createBottomTabNavigator({
             fontSize: 12,
             margin: 1
         },
-        indicatorStyle: { height: 0 }, //android 中TabBar下面会显示一条线，高度设为 0 后就不显示线了
+        indicatorStyle: {height: 0}, //android 中TabBar下面会显示一条线，高度设为 0 后就不显示线了
     },
 });
+TabNavigator.navigationOptions = {
+    header: null
+};
 
-const AppNavigator =  createAppContainer(TabNavigator);
+const StackNavigator = createStackNavigator({
+    Pages: {screen: TabNavigator},
+    CreateAccount: {screen: CreateAccount},
+    ImportAccount: {screen: ImportAccount},
+});
+
+
+const AppNavigator = createAppContainer(StackNavigator);
 
 //module.exports = AppNavigator;

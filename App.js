@@ -1,7 +1,7 @@
-
-import React, { Component } from 'react';
-import { Platform } from 'react-native';
-
+import React, {Component} from 'react';
+import {AsyncStorage, Platform} from 'react-native';
+import Storage from "react-native-storage";
+import nodejs from "nodejs-mobile-react-native";
 import Pages from './app/router/index';
 
 const instructions = Platform.select({
@@ -11,8 +11,29 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-type Props = {};
-export default class App extends Component<Props> {
+const storage = new Storage({
+    size: 1000,
+    storageBackend: AsyncStorage,
+    defaultExpires: null,
+});
+
+
+export default class App extends Component<> {
+
+    componentWillMount() {
+        global.storage = storage;
+        nodejs.start('main.js');
+        storage.load({
+            key: 'accountList'
+        }).then(res => {
+            let pks = [];
+            for (let item of res) {
+                pks.push(item.privateKey);
+            }
+            nodejs.channel.send(JSON.stringify({data: pks, category: 'accountChange'}));
+        });
+    }
+
     render() {
         return (
             <Pages/>
