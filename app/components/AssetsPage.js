@@ -11,17 +11,19 @@ import {Image, StyleSheet, View} from 'react-native';
 import {ActionSheet, Button, Card, CardItem, Text} from "native-base";
 import nodejs from "nodejs-mobile-react-native";
 import Toast from "react-native-root-toast/lib/Toast";
+import {NavigationEvents} from 'react-navigation';
 
 export default class AssetsPage extends Component<> {
     static navigationOptions = {
         tabBarLabel: '主页',
-        tabBarIcon: ({ focused }) => (
+        tabBarIcon: ({focused}) => (
             <Image
                 source={focused ? require('../images/tabbar1_sel.png') : require('../images/tabbar1.png')}
-                style={{ width: 26, height: 26}}
+                style={{width: 26, height: 26}}
             />
         )
     };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -62,6 +64,16 @@ export default class AssetsPage extends Component<> {
 
     loadData() {
         storage.load({
+            key: 'defaultAccount'
+        }).then(res => {
+            this.setState({account: res});
+            nodejs.channel.send(JSON.stringify({category: 'getAccountInfo', account: res}));
+            nodejs.channel.send(JSON.stringify({category: 'getBalance', account: res}));
+        });
+    }
+
+    loadAccountList() {
+        storage.load({
             key: 'accountList'
         }).then(res => {
             this.setState({accounts: res});
@@ -70,13 +82,6 @@ export default class AssetsPage extends Component<> {
                 names.push(account.name);
             }
             this.setState({accountNames: names});
-        });
-        storage.load({
-            key: 'defaultAccount'
-        }).then(res => {
-            this.setState({account: res});
-            nodejs.channel.send(JSON.stringify({category: 'getAccountInfo', account: res}));
-            nodejs.channel.send(JSON.stringify({category: 'getBalance', account: res}));
         });
     }
 
@@ -95,6 +100,12 @@ export default class AssetsPage extends Component<> {
     render() {
         return (
             <View style={styles.container}>
+                <NavigationEvents
+                    // onWillFocus={payload=>console.log('onWillFocus')}
+                    onDidFocus={payload => this.loadAccountList()}
+                    // onWillBlur={payload=>console.log('onWillBlur')}
+                    // onDidBlur={payload=>console.log('onDidBlur')}
+                />
                 <View style={styles.row}>
                     <Button rounded light style={styles.button} onPress={() => {
                         ActionSheet.show({
@@ -135,22 +146,26 @@ export default class AssetsPage extends Component<> {
                     <CardItem>
                         <Button transparent style={styles.row_container} onPress={() => {
                             this.props.navigation.push('Transfer')
-                        }}><Text>转账</Text></Button><Text>|</Text>
+                        }}><Text>转账</Text></Button>
+                        <Text>|</Text>
                         <Button transparent style={styles.row_container} onPress={() => {
-                            this.props.navigation.push('Transfer')
+                            this.props.navigation.push('Receive', {
+                                account: this.state.account
+                            })
                         }}><Text>收款</Text></Button>
                     </CardItem>
                 </Card>
-                <Text style={styles.welcome}/>
-                <Button primary style={styles.button} onPress={() => {
-                    this.props.navigation.push('CreateAccount')
-                }}><Text>create account</Text></Button>
-
-                <Text style={styles.welcome}/>
-
-                <Button primary style={styles.button} onPress={() => {
-                    this.props.navigation.push('ImportAccount')
-                }}><Text>import account</Text></Button>
+                <View style={{flexDirection:'row',height:50,marginTop:20}}>
+                    <Button primary style={styles.row_container} onPress={() => {
+                        this.props.navigation.push('CreateAccount')
+                    }}><Text>创建</Text></Button>
+                    <View style={{marginStart: 10,marginEnd: 10}}/>
+                    <Button primary style={styles.row_container} onPress={() => {
+                        this.props.navigation.push('ImportAccount', {
+                            account: this.state.account
+                        })
+                    }}><Text>导入</Text></Button>
+                </View>
             </View>
         );
     }
@@ -187,6 +202,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 20,
         textAlign: 'center',
-        margin: 30,
+        margin: 10,
     },
 });

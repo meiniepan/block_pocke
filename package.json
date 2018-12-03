@@ -12,10 +12,11 @@
     "nodejs-mobile-react-native": "^0.3.2",
     "react": "16.4.1",
     "react-native": "0.56.0",
-    "react-navigation": "^3.0.1",
     "react-native-gesture-handler": "^1.0.9",
+    "react-native-qrcode": "^0.2.7",
     "react-native-root-toast": "^3.0.1",
-    "react-native-storage": "^0.2.3"
+    "react-native-storage": "^0.2.3",
+    "react-navigation": "^3.0.1"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

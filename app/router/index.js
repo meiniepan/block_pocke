@@ -7,6 +7,8 @@ import InformationPage from '../components/InformationPage';
 import MinePage from '../components/MinePage';
 import CreateAccount from "../components/account/CreateAccount";
 import ImportAccount from "../components/account/ImportAccount";
+import Transfer from "../components/account/Transfer";
+import ReceivePage from "../components/account/Receive";
 
 // import { createStackNavigator, createMaterialTopTabNavigator, Header } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
@@ -26,7 +28,6 @@ export default class Pages extends Component {
         )
     }
 }
-
 
 const TabNavigator = createBottomTabNavigator({
     page1: {screen: AssetsPage},
@@ -60,8 +61,10 @@ TabNavigator.navigationOptions = {
 
 const StackNavigator = createStackNavigator({
     Pages: {screen: TabNavigator},
+    Transfer: {screen: Transfer},
     CreateAccount: {screen: CreateAccount},
     ImportAccount: {screen: ImportAccount},
+    Receive:{screen:ReceivePage}
 });
 
 

@@ -9,8 +9,7 @@
 import React, {Component} from 'react';
 import {Button, Platform, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
-import Toast from "react-native-root-toast/lib/Toast";
-import Loading from "./Loading";
+import Loading from "../Loading";
 
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -21,8 +20,9 @@ const instructions = Platform.select({
 
 export default class Transfer extends Component<> {
     static navigationOptions = {
-        title:'Transfer',
+        title: 'Transfer',
     };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -55,15 +55,10 @@ export default class Transfer extends Component<> {
     }
 
     render() {
-        const {navigation} =this.props;
+        const {navigation} = this.props;
         return (
             <ScrollView style={styles.container}>
                 {this.state.loading === true ? <Loading/> : (null)}
-                <View style={styles.row_container}>
-                    <View style={{backgroundColor:'#32e212', height: 100 ,flex:1}}/>
-                    <View style={{backgroundColor:'#345345' ,height: 100,flex:1}}/>
-                    <View style={{backgroundColor:'#464292' ,height: 100,flex:1}}/>
-                </View>
                 <View style={styles.row_container}>
                     <Text style={styles.welcome}>from: </Text><TextInput style={styles.input}
                                                                          onChangeText={(from) => this.setState({from: from})}>{this.state.from}</TextInput>
@@ -77,14 +72,14 @@ export default class Transfer extends Component<> {
                                                                            onChangeText={(amount) => this.setState({amount: amount})}>{this.state.amount}</TextInput>
                 </View>
                 <View style={styles.row_container}>
-                    <Text style={styles.welcome}>memo: </Text><TextInput style={styles.input} onChangeText={(memo) => this.setState({memo: memo})}/>
+                    <Text style={styles.welcome}>memo: </Text><TextInput style={styles.input}
+                                                                         onChangeText={(memo) => this.setState({memo: memo})}/>
                 </View>
-                <Button title="创建钱包" onPress={()=> (navigation.navigate ('Account'))}/>
                 <Text style={styles.welcome}/>
                 <Button title="转账"
                         onPress={() => {
                             var transferBody = {
-                                category:"transfer",
+                                category: "transfer",
                                 from: this.state.from,
                                 to: this.state.to,
                                 memo: this.state.memo,
@@ -110,7 +105,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     container: {
-        flex:1,
+        flex: 1,
         backgroundColor: '#F5FCFF',
         flexDirection: 'column',
         marginStart: 20,
@@ -129,6 +124,6 @@ const styles = StyleSheet.create({
     input: {
         height: 50,
         width: 200,
-        borderColor:'#3285FF',
+        borderColor: '#3285FF',
     }
 });
