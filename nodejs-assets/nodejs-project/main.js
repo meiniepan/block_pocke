@@ -199,6 +199,33 @@ rn_bridge.channel.on('message', async (msg) => {
                 callback(error, resultObj);
             });
             break
+        case 'block':
+            MongoClient.connect(mongodburl, function (err, db) {
+                if (err) {
+                    throw err
+                }
+                var dbo = db.db('EOS')
+                var quary = {
+                    'action_traces': {
+                        $elemMatch: {
+                            'act.data.from': 'mukang123123',
+                        }
+                    }
+                };
+                dbo.collection('transaction_traces').find(quary).toArray(function (err, numDocs) {
+                    if (err) {
+                        throw err
+                    }
+                    var rel = {
+                        trans2: numDocs,
+                    };
+                    rn_bridge.channel.send(JSON.stringify(rel));
+                    db.close()
+
+                });
+
+            })
+            break;
     }
 
 
