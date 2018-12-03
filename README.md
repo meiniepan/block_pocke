@@ -1,4 +1,5 @@
 ## Before
+For Linux system:
 
 ```
 sam@sam-thinkpad:~/Public/trustpocket$ echo fs.inotify.max_user_watches=16384 | sudo tee -a /etc/sysctl.conf
@@ -9,19 +10,18 @@ fs.inotify.max_user_watches = 16384
 ```
 ## How to use
 ```
-npm install
+yarn
 ```
-```
-npm install nodejs-mobile-react-native --save
-```
+
 
 ```
 react-native link nodejs-mobile-react-native
+react-native link react-native-gesture-handler
 ```
 ```
 cd nodejs-assets
 cd nodejs-project
-npm install
+yarn
 
 ```
 ```
