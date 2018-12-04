@@ -152,11 +152,11 @@ rn_bridge.channel.on('message', async (msg) => {
                     if (!error) {
                         config.keyProvider.push(rel.privateKeys.owner);
                         eos = Eos(config);
-                        console.log(config.keyProvider.length);
                         result = {
                             name: obj.account,
                             privateKey: rel.privateKeys.owner,
                             publicKey: rel.publicKeys.owner,
+                            category:'accountChange'
                         }
                     }
                     callback(error, result);
@@ -174,6 +174,7 @@ rn_bridge.channel.on('message', async (msg) => {
                         name: account,
                         privateKey: obj.pk,
                         publicKey: pubkey,
+                        category:'accountChange'
                     };
                     callback("", callbackObj);
                 }

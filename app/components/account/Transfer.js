@@ -9,7 +9,7 @@
 import React, {Component} from 'react';
 import {Button, Platform, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
-import Loading from "../Loading";
+import Loading from "../widget/Loading";
 
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -27,10 +27,10 @@ export default class Transfer extends Component<> {
         super(props);
         this.state = {
             account: 'here is result',
-            from: 'ayiuivl52fnq',
-            to: 'mukang123123',
+            from: '',
+            to: '',
             amount: '1.0000 EOS',
-            memo: 'HHH',
+            memo: '',
             loading: "false"
         };
         this.listenerRef = null;
@@ -38,6 +38,11 @@ export default class Transfer extends Component<> {
 
     componentWillMount() {
         nodejs.start('main.js');
+        storage.load({
+            key:'defaultAccount'
+        }).then(res=>{
+            this.setState({account:res})
+        });
         this.listenerRef = ((rel) => {
             this.setState({account: rel.toString(), loading: false});
         });

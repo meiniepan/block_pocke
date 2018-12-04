@@ -5,8 +5,9 @@
 
 import React, {Component} from 'react';
 import QRCode from 'react-native-qrcode'
-import {Button, StyleSheet, Text, View} from 'react-native';
-export default class ReceivePage extends Component<>{
+import {StyleSheet, Text, View} from 'react-native';
+
+export default class ReceivePage extends Component<> {
     static navigationOptions = {
         title: 'Receive',
     };
@@ -14,25 +15,26 @@ export default class ReceivePage extends Component<>{
     constructor(props) {
         super(props);
         this.state = {
-            account: 'ayiuivl52fnq',
+            account: '',
         };
     }
 
     componentDidMount() {
-
-
+        storage.load({
+            key: 'defaultAccount'
+        }).then(res => {
+            this.setState({account: res})
+        });
     }
 
     render() {
-        const account = this.props.navigation.getParam('account');
-
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>{account}</Text>
-                <QRCode value={account}
-                size={200}
-                bgColor='purple'
-                fgColor='white'/>
+                <Text style={styles.text}>{this.state.account}</Text>
+                <QRCode value={this.state.account}
+                        size={200}
+                        bgColor='purple'
+                        fgColor='white'/>
             </View>
 
         );
@@ -40,10 +42,10 @@ export default class ReceivePage extends Component<>{
 }
 const styles = StyleSheet.create({
     container: {
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor:'white',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
         flexDirection: 'column'
     },
     text: {

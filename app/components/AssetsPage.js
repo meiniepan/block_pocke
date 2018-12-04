@@ -11,7 +11,7 @@ import {Image, StyleSheet, View} from 'react-native';
 import {ActionSheet, Button, Card, CardItem, Text} from "native-base";
 import nodejs from "nodejs-mobile-react-native";
 import Toast from "react-native-root-toast/lib/Toast";
-import {NavigationEvents} from 'react-navigation';
+import PopupWindow from "./widget/AssetsPopupWindow";
 
 export default class AssetsPage extends Component<> {
     static navigationOptions = {
@@ -31,7 +31,8 @@ export default class AssetsPage extends Component<> {
             accounts: [],
             accountNames: [],
             RAM: '',
-            balance: ''
+            balance: '',
+            popShow: false
         };
         this.listenerRef = null;
     }
@@ -48,7 +49,8 @@ export default class AssetsPage extends Component<> {
                 this.setState({RAM: resultBean.ram_usage})
             } else if (resultBean.category === 'getBalance') {
                 this.setState({balance: resultBean.balance})
-
+            } else if (resultBean.category === 'accountChange') {
+                this.loadData()
             }
         });
         nodejs.channel.addListener(
@@ -70,6 +72,7 @@ export default class AssetsPage extends Component<> {
             nodejs.channel.send(JSON.stringify({category: 'getAccountInfo', account: res}));
             nodejs.channel.send(JSON.stringify({category: 'getBalance', account: res}));
         });
+        this.loadAccountList()
     }
 
     loadAccountList() {
@@ -87,7 +90,6 @@ export default class AssetsPage extends Component<> {
 
     componentWillUnmount() {
 
-
     }
 
     saveDefaultAccount(accountName) {
@@ -100,13 +102,13 @@ export default class AssetsPage extends Component<> {
     render() {
         return (
             <View style={styles.container}>
-                <NavigationEvents
-                    // onWillFocus={payload=>console.log('onWillFocus')}
-                    onDidFocus={payload => this.loadAccountList()}
-                    // onWillBlur={payload=>console.log('onWillBlur')}
-                    // onDidBlur={payload=>console.log('onDidBlur')}
-                />
-                <View style={styles.row}>
+                {/*<NavigationEvents*/}
+                {/*onWillFocus={payload=>console.log('onWillFocus')}*/}
+                {/*onDidFocus={payload => this.loadData()}*/}
+                {/*onWillBlur={payload=>console.log('onWillBlur')}*/}
+                {/*onDidBlur={payload=>console.log('onDidBlur')}*/}
+                {/*/>*/}
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Button rounded light style={styles.button} onPress={() => {
                         ActionSheet.show({
                                 options: this.state.accountNames,
@@ -122,6 +124,10 @@ export default class AssetsPage extends Component<> {
                     }}>
                         <Text>{this.state.account}</Text>
                     </Button>
+
+                    <Button transparent onPress={() => {
+                        this.setState({popShow: true});
+                    }}><Text style={{fontSize: 28, textColor: '#2a2a2a'}}>+</Text></Button>
                 </View>
 
                 <Card style={{marginTop: 20}}>
@@ -149,23 +155,24 @@ export default class AssetsPage extends Component<> {
                         }}><Text>转账</Text></Button>
                         <Text>|</Text>
                         <Button transparent style={styles.row_container} onPress={() => {
-                            this.props.navigation.push('Receive', {
-                                account: this.state.account
-                            })
+                            this.props.navigation.push('Receive')
                         }}><Text>收款</Text></Button>
                     </CardItem>
                 </Card>
-                <View style={{flexDirection:'row',height:50,marginTop:20}}>
+                <View style={{flexDirection: 'row', height: 50, marginTop: 20}}>
                     <Button primary style={styles.row_container} onPress={() => {
                         this.props.navigation.push('CreateAccount')
                     }}><Text>创建</Text></Button>
-                    <View style={{marginStart: 10,marginEnd: 10}}/>
+                    <View style={{marginStart: 10, marginEnd: 10}}/>
                     <Button primary style={styles.row_container} onPress={() => {
                         this.props.navigation.push('ImportAccount', {
                             account: this.state.account
                         })
                     }}><Text>导入</Text></Button>
                 </View>
+                <PopupWindow show={this.state.popShow} navigation={this.props.navigation} closeModal={(show) => {
+                    this.setState({popShow: show})
+                }} dataArray={['扫一扫', '转账', '收款', '交易记录']}/>
             </View>
         );
     }
