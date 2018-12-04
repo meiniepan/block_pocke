@@ -3,7 +3,9 @@ import {
     StyleSheet,
     FlatList,
     Text,
-    View, Image,
+    View, 
+    Image,
+    TouchableOpacity,
 } from 'react-native';
 export default class MinePage extends Component {
     static navigationOptions = {
@@ -28,9 +30,23 @@ export default class MinePage extends Component {
                     {key: '安全'},
                     {key: '关于我们'},
                 ]}
-                renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
+                renderItem={this._renderItem}
                 />
             </View>
+        );
+    }
+
+    _renderItem = ({item}) => {
+        return (
+            <TouchableOpacity
+                onPress = {() => {
+                    if (item.key === '节点选择') {
+                        this.props.navigation.push('NodeList');
+                    }
+                }}
+            >
+                <Text style={styles.item}>{item.key}</Text>
+            </TouchableOpacity>
         );
     }
 }

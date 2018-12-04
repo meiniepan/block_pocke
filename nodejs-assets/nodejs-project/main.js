@@ -227,6 +227,16 @@ rn_bridge.channel.on('message', async (msg) => {
 
             })
             break;
+        case 'endPointChange':
+            let nodeItem = obj.nodeItem;
+            config.httpEndpoint = 'http://' + nodeItem.address + ':' + nodeItem.port;
+            eos = Eos(config);
+            let result = {
+                category: 'endPointChange',
+                nodeItem: nodeItem
+            };
+            callback(null, result);
+            break;
     }
 
 
