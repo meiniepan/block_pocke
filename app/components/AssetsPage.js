@@ -8,9 +8,8 @@
 
 import React, {Component} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
-import {ActionSheet, Button, Card, CardItem, Text} from "native-base";
+import {ActionSheet, Button, Card, CardItem, Text, Toast} from "native-base";
 import nodejs from "nodejs-mobile-react-native";
-import Toast from "react-native-root-toast/lib/Toast";
 import PopupWindow from "./widget/AssetsPopupWindow";
 
 export default class AssetsPage extends Component<> {
@@ -65,6 +64,11 @@ export default class AssetsPage extends Component<> {
     }
 
     loadData() {
+        this.loadAccountData();
+        this.loadAccountList()
+    }
+
+    loadAccountData() {
         storage.load({
             key: 'defaultAccount'
         }).then(res => {
@@ -72,7 +76,6 @@ export default class AssetsPage extends Component<> {
             nodejs.channel.send(JSON.stringify({category: 'getAccountInfo', account: res}));
             nodejs.channel.send(JSON.stringify({category: 'getBalance', account: res}));
         });
-        this.loadAccountList()
     }
 
     loadAccountList() {
@@ -119,6 +122,7 @@ export default class AssetsPage extends Component<> {
                                     let accountName = this.state.accountNames[buttonIndex];
                                     this.setState({account: accountName});
                                     this.saveDefaultAccount(accountName);
+                                    this.loadAccountData();
                                 }
                             })
                     }}>

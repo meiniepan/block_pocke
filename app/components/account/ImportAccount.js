@@ -9,7 +9,7 @@
 import React, {Component} from 'react';
 import {Button, StyleSheet, TextInput, View} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
-import Toast from "react-native-root-toast/lib/Toast";
+import Toast from "react-native-root-toast";
 
 export default class ImportAccount extends Component<> {
     static navigationOptions = {
@@ -41,10 +41,6 @@ export default class ImportAccount extends Component<> {
     }
 
     async saveAccount(rel) {
-        // await AsyncStorage.setItem("account", "5Hxgk9eLVfXF9LNPupGK3y7B3LukMRdraFyNdGiZfQKkUwhXUva");
-        // var pk = await AsyncStorage.getItem('account');
-        // Toast.show('import success');
-        // this.setState({pk:pk});
         var accountBean = JSON.parse(rel);
         if (accountBean.error) {
             Toast.show(accountBean.error);
@@ -116,7 +112,6 @@ export default class ImportAccount extends Component<> {
                         pk: this.state.pk,
                     };
                     nodejs.channel.send(JSON.stringify(importObj));
-                    // this.saveAccount();
                 }}>import account</Button>
             </View>
         );

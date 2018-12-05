@@ -14,7 +14,7 @@ let config = {
 var eos = Eos(config);
 
 function callback(errorString, result) {
-    console.log(errorString + "...." + result.toString());
+    console.log(errorString + "...." + JSON.stringify(result));
     if (errorString) {
         try {
             let errorBean = JSON.parse(errorString);
@@ -42,39 +42,6 @@ rn_bridge.channel.on('message', async (msg) => {
             break;
         case 'createAccount':
             Keygen.generateMasterKeys().then(rel => {
-                console.log(rel.publicKeys.owner);
-                console.log(rel.privateKeys.owner);
-                // eos.newaccount({
-                //     creator: 'ayiuivl52fnq',
-                //     name: obj.account,
-                //     owner: {
-                //         threshold: 1,
-                //         keys: [{
-                //             key: rel.publicKeys.owner,
-                //             weight: 1
-                //         }],
-                //         accounts: [],
-                //         waits: []
-                //     },
-                //     active: {
-                //         threshold: 1,
-                //         keys: [{
-                //             key: rel.publicKey.owner,
-                //             weight: 1
-                //         }],
-                //         accounts: [],
-                //         waits: []
-                //     },
-                // }, (error, result) => {
-                //     if (!error){
-                //         var accountBean ={
-                //             name: obj.account,
-                //             privateKey: rel.privateKeys.owner,
-                //             publicKey: rel.publicKeys.owner,
-                //         }
-                //     }
-                //     callback(error, accountBean);
-                // });
                 eos.transaction({
                     actions: [
                         {

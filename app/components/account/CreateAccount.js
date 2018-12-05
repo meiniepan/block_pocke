@@ -9,7 +9,7 @@
 import React, {Component} from 'react';
 import {Button, Platform, StyleSheet, Text, TextInput, View} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
-import Toast from "react-native-root-toast/lib/Toast";
+import Toast from "react-native-root-toast";
 import Loading from "../widget/Loading";
 
 const instructions = Platform.select({

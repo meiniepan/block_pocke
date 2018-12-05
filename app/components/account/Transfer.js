@@ -7,16 +7,9 @@
  */
 
 import React, {Component} from 'react';
-import {Button, Platform, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Button, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
 import Loading from "../widget/Loading";
-
-const instructions = Platform.select({
-    ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-    android:
-        'Double tap R on your keyboard to reload,\n' +
-        'Shake or press menu button for dev menu',
-});
 
 export default class Transfer extends Component<> {
     static navigationOptions = {
@@ -38,11 +31,6 @@ export default class Transfer extends Component<> {
 
     componentWillMount() {
         nodejs.start('main.js');
-        storage.load({
-            key:'defaultAccount'
-        }).then(res=>{
-            this.setState({account:res})
-        });
         this.listenerRef = ((rel) => {
             this.setState({account: rel.toString(), loading: false});
         });
@@ -51,6 +39,16 @@ export default class Transfer extends Component<> {
             this.listenerRef,
             this
         );
+    }
+
+    componentDidMount() {
+        storage.load({
+            key: 'defaultAccount'
+        }).then(res => {
+            this.setState({from: res})
+        });
+
+        this.setState({to: this.props.navigation.getParam('account', "")});
     }
 
     componentWillUnmount() {
@@ -70,7 +68,7 @@ export default class Transfer extends Component<> {
                 </View>
                 <View style={styles.row_container}>
                     <Text style={styles.welcome}>to: </Text><TextInput style={styles.input}
-                                                                       onChangeText={(to) => this.setState({to: to})}/>
+                                                                       onChangeText={(to) => this.setState({to: to})}>{this.state.to}</TextInput>
                 </View>
                 <View style={styles.row_container}>
                     <Text style={styles.welcome}>amount: </Text><TextInput style={styles.input}

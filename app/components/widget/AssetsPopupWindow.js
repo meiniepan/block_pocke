@@ -6,7 +6,7 @@ import React from 'react'
 import {ART, Dimensions, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 const {width, height} = Dimensions.get('window');
-let mwidth = 70;
+let mwidth = 80;
 let mheight = 120;
 const bgColor = '#2d2d2d';//背景色,没有设置外部传入
 const top = 60;
@@ -73,7 +73,7 @@ export default class MenuModal extends React.Component {
         this.closeModal();
         switch (index) {
             case 0:
-
+                navigation.push('QRScanner');
                 break;
             case 1:
                 navigation.push('Transfer');
@@ -82,6 +82,7 @@ export default class MenuModal extends React.Component {
                 navigation.push('Receive');
                 break;
             case 3:
+
                 break
         }
     }
@@ -108,11 +109,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         flex: 1,
-        height: 28
+        height: 28,
     },
     textStyle: {
         color: '#fff',
-        fontSize: 14,
+        fontSize: 12,
         marginLeft: 2,
     },
     imgStyle: {

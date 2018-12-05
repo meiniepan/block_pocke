@@ -9,6 +9,7 @@ import CreateAccount from "../components/account/CreateAccount";
 import ImportAccount from "../components/account/ImportAccount";
 import Transfer from "../components/account/Transfer";
 import ReceivePage from "../components/account/Receive";
+import QRScanner from "../components/widget/QRScanner";
 import NodeList from '../components/ping/NodeList';
 
 // import { createStackNavigator, createMaterialTopTabNavigator, Header } from 'react-navigation';
@@ -65,8 +66,9 @@ const StackNavigator = createStackNavigator({
     Transfer: {screen: Transfer},
     CreateAccount: {screen: CreateAccount},
     ImportAccount: {screen: ImportAccount},
-    Receive:{screen:ReceivePage},
     NodeList: {screen: NodeList},
+    Receive: {screen: ReceivePage},
+    QRScanner: {screen: QRScanner}
 });
 
 

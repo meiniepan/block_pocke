@@ -31,7 +31,7 @@ export default class ReceivePage extends Component<> {
         return (
             <View style={styles.container}>
                 <Text style={styles.text}>{this.state.account}</Text>
-                <QRCode value={this.state.account}
+                <QRCode value={"receive://"+this.state.account}
                         size={200}
                         bgColor='purple'
                         fgColor='white'/>

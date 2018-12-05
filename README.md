@@ -18,7 +18,7 @@ yarn
 react-native link nodejs-mobile-react-native
 react-native link react-native-gesture-handler
 react-native link react-native-ping
-
+react-native link react-native-camera
 or
 
 react-native link
