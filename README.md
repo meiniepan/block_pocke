@@ -17,6 +17,11 @@ yarn
 ```
 react-native link nodejs-mobile-react-native
 react-native link react-native-gesture-handler
+react-native link react-native-ping
+
+or
+
+react-native link
 ```
 ```
 cd nodejs-assets

@@ -1,14 +1,14 @@
 [
     {
-        "name": "本地节点01",
+        "name": "本地节点",
         "address": "192.168.1.186",
         "port": "8888",
         "delay": 0,
         "isDefault": false
     },
     {
-        "name": "本地节点02",
-        "address": "192.168.1.186",
+        "name": "粒子机01",
+        "address": "192.168.1.156",
         "port": "8888",
         "delay": 0,
         "isDefault": false
