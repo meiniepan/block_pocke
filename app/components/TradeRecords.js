@@ -4,25 +4,53 @@ import nodejs from "nodejs-mobile-react-native";
 
 
 export default class FlatListBasics extends Component {
+    static navigationOptions = {
+        title: '交易记录',
+    };
 
     constructor(props) {
         super(props);
-        this.state = {sourceData: []};
+        this.state = {sourceData: [], account: ''};
         this.listenerRef = null;
-        var transferBody = {
-            category: 'block'
-        };
+
         nodejs.start('main.js');
         this.listenerRef = ((rel) => {
-            var arr1 = JSON.parse(rel).trans2;
-            var arr2 = new Array();
+            let arr1 = JSON.parse(rel).trans2;
+            let arr2 = new Array();
+            let otherAccount, tradeSymbol, quantity, time
             for (let i = 0; i < arr1.length; i++) {
+                time = arr1[i].createdAt
+                time = time.substr(0,10)+" "+time.substr(11,8)
                 for (let j = 0; j < arr1[i].action_traces.length; j++) {
+                    if (arr1[i].action_traces[j].act.data.from == (this.state.account)
+                        && arr1[i].action_traces[j].act.data.quantity != null
+                    ) {
+                        otherAccount = arr1[i].action_traces[j].act.data.to
+                        tradeSymbol = '- '
+                        quantity = arr1[i].action_traces[j].act.data.quantity
+                        arr2.push({
+                            otherAccount: otherAccount,
+                            tradeSymbol: tradeSymbol,
+                            quantity: quantity,
+                            time: time
+                        })
+                    } else if (arr1[i].action_traces[j].act.data.to == (this.state.account)
+                        && arr1[i].action_traces[j].act.data.quantity != null
+                    ) {
+                        otherAccount = arr1[i].action_traces[j].act.data.from
+                        tradeSymbol = '+ '
+                        quantity = arr1[i].action_traces[j].act.data.quantity
+                        arr2.push({
+                            otherAccount: otherAccount,
+                            tradeSymbol: tradeSymbol,
+                            quantity: quantity,
+                            time: time
+                        })
+                    }
 
-                    arr2.push((arr1[i].action_traces[j]))
                 }
             }
-            this.setState({account: arr2.length});
+            arr2.reverse()
             this.setState({sourceData: arr2});
         });
         nodejs.channel.addListener(
@@ -33,8 +61,12 @@ export default class FlatListBasics extends Component {
     }
 
     componentDidMount() {
-        nodejs.channel.send(JSON.stringify(transferBody));
-
+        storage.load({
+            key: 'defaultAccount'
+        }).then(res => {
+            this.setState({account: res})
+            nodejs.channel.send(JSON.stringify({category: 'tradeRecords', account: res}));
+        });
     }
 
     componentWillUnmount() {
@@ -52,14 +84,19 @@ export default class FlatListBasics extends Component {
 
         return (
             <View style={styles.container}>
-                <View style={styles.row_container}>
-                    <Image style={styles.a1} source={require('./back_black.png')}/>
-                    <Text style={styles.a2}>交易列表</Text>
-                    <Text style={styles.a3}>选择</Text>
-                </View>
                 <FlatList
                     data={this.state.sourceData}
-                    renderItem={({item}) => <Text style={styles.item}>{item.act.data.quantity}</Text>}
+                    renderItem={({item}) => <View style={styles.row_container}>
+                        <View style={styles.row_container_1}>
+                            <Text style={styles.a2}>
+                                {item.otherAccount}
+                            </Text>
+                            <Text style={styles.a22}>
+                                {item.time}
+                            </Text>
+                        </View>
+                        <Text style={styles.a3}>{item.tradeSymbol + item.quantity}</Text>
+                    </View>}
                     ItemSeparatorComponent={this._renderItemSeparatorComponent}
                 />
             </View>
@@ -81,9 +118,11 @@ const styles = StyleSheet.create({
     row_container: {
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
         flexDirection: 'row',
-        padding: 20
+        padding: 10
+    },
+    row_container_1: {
+        justifyContent: 'flex-start'
     },
 
     a1: {
@@ -93,14 +132,19 @@ const styles = StyleSheet.create({
     },
     a2: {
         fontSize: 20,
-        textAlign: 'center',
+        color:'#333',
         margin: 0,
         // justifyContent:'center',
     },
-    a3: {
+    a22: {
         fontSize: 16,
+        color:'#999',
+        margin: 0,
+    },
+    a3: {
+        fontSize: 22,
+        color:'#333',
         textAlign: 'center',
         margin: 0,
-        // justifyContent:'flex-end'
     },
 })

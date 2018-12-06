@@ -3,7 +3,7 @@ import {
     StyleSheet,
     FlatList,
     Text,
-    View, 
+    View,
     Image,
     TouchableOpacity,
 } from 'react-native';
@@ -20,17 +20,17 @@ export default class MinePage extends Component {
     render() {
         return (
             <View style={styles.container}>
-            <FlatList
-                data={[
-                    {key: '节点选择'},
-                    {key: '交易记录'},
-                    {key: '管理钱包'},
-                    {key: '推荐好友'},
-                    {key: '语言设置'},
-                    {key: '安全'},
-                    {key: '关于我们'},
-                ]}
-                renderItem={this._renderItem}
+                <FlatList
+                    data={[
+                        {key: '节点选择'},
+                        {key: '交易记录'},
+                        {key: '管理钱包'},
+                        {key: '推荐好友'},
+                        {key: '语言设置'},
+                        {key: '安全'},
+                        {key: '关于我们'},
+                    ]}
+                    renderItem={this._renderItem}
                 />
             </View>
         );
@@ -42,6 +42,8 @@ export default class MinePage extends Component {
                 onPress = {() => {
                     if (item.key === '节点选择') {
                         this.props.navigation.push('NodeList');
+                    }else if (item.key === '交易记录') {
+                        this.props.navigation.push('TradeRecords');
                     }
                 }}
             >

@@ -1,6 +1,8 @@
 var rn_bridge = require('rn-bridge');
 var Eos = require("oasisjs");
 let {Keystore, Keygen} = require('eosjs-keygen');
+var MongoClient = require('mongodb').MongoClient;
+var mongodburl = 'mongodb://192.168.1.184:27017/'
 
 let config = {
     chainId: "8a679bd6c011ff93eff0cb99d997bf72a69a0aaddc430d7e9c4b705f4de4d843", // 32 byte (64 char) hex string
@@ -14,7 +16,7 @@ let config = {
 var eos = Eos(config);
 
 function callback(errorString, result) {
-    console.log(errorString + "...." + JSON.stringify(result));
+    console.log(errorString + "...." + result.toString());
     if (errorString) {
         try {
             let errorBean = JSON.parse(errorString);
@@ -42,6 +44,39 @@ rn_bridge.channel.on('message', async (msg) => {
             break;
         case 'createAccount':
             Keygen.generateMasterKeys().then(rel => {
+                console.log(rel.publicKeys.owner);
+                console.log(rel.privateKeys.owner);
+                // eos.newaccount({
+                //     creator: 'ayiuivl52fnq',
+                //     name: obj.account,
+                //     owner: {
+                //         threshold: 1,
+                //         keys: [{
+                //             key: rel.publicKeys.owner,
+                //             weight: 1
+                //         }],
+                //         accounts: [],
+                //         waits: []
+                //     },
+                //     active: {
+                //         threshold: 1,
+                //         keys: [{
+                //             key: rel.publicKey.owner,
+                //             weight: 1
+                //         }],
+                //         accounts: [],
+                //         waits: []
+                //     },
+                // }, (error, result) => {
+                //     if (!error){
+                //         var accountBean ={
+                //             name: obj.account,
+                //             privateKey: rel.privateKeys.owner,
+                //             publicKey: rel.publicKeys.owner,
+                //         }
+                //     }
+                //     callback(error, accountBean);
+                // });
                 eos.transaction({
                     actions: [
                         {
@@ -167,20 +202,28 @@ rn_bridge.channel.on('message', async (msg) => {
                 callback(error, resultObj);
             });
             break
-        case 'block':
+        case 'tradeRecords':
+            let name = obj.account;
             MongoClient.connect(mongodburl, function (err, db) {
                 if (err) {
                     throw err
                 }
-                var dbo = db.db('EOS')
-                var quary = {
+                let dbo = db.db('EOS')
+                let quary1 = {
                     'action_traces': {
                         $elemMatch: {
-                            'act.data.from': 'mukang123123',
+                            'act.data.from': name,
                         }
                     }
                 };
-                dbo.collection('transaction_traces').find(quary).toArray(function (err, numDocs) {
+                let quary2 = {
+                    'action_traces': {
+                        $elemMatch: {
+                            'act.data.to': name,
+                        }
+                    }
+                };
+                dbo.collection('transaction_traces').find({ $or: [ quary1, quary2 ] }).toArray(function (err, numDocs) {
                     if (err) {
                         throw err
                     }
